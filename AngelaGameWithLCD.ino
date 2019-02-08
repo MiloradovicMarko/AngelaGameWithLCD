@@ -5,6 +5,7 @@ const int btn3 = 4;
 int turno = 0;
 int somma = 0;
 int meta = 0;
+int giocataPre = 0;
 bool turnoStart = true;
 LiquidCrystal lcd(12, 11, 10, 9, 8, 7);
 
@@ -24,8 +25,39 @@ void loop() {
 
 
 
-
-
+void caso1(int giocata)
+{
+      if(giocata == 1 || giocata == 6 || giocata == 0 && giocata > 6)
+      { Serial.println("Non barare");attesa() ;} 
+      else
+      {
+        somma += giocata;
+        giocataPre = giocata;
+        Serial.println(giocata);
+        Serial.println("Punteggio raggiunto: ");
+        Serial.println(somma);
+        switchTurno();   
+      }
+      
+}
+void cambioMeta()
+{
+  attesa();
+  if(digitalRead(btn1) == LOW)
+  {
+    lcd.clear();
+    lcd.setCursor(0,1);
+    meta++;
+    lcd.print(meta);
+  }
+  else if(digitalRead(btn3) == LOW)
+  {
+    lcd.clear();
+    lcd.setCursor(0,1);
+    meta--;
+    lcd.print(meta);
+  }
+}
 void attesa()
 {
     while(digitalRead(btn1) == HIGH || digitalRead(btn2) == HIGH || digitalRead(btn3) == HIGH)
@@ -42,11 +74,15 @@ void winOrLose()
 {
   if((somma == meta && turno == 1) || (somma >= meta && turno == 1))
   {
+    lcd.clear();
+    lcd.setCursor(0,0);
     lcd.println("Ha vinto il primo giocatore!");ricomincia();
     ricomincia();
   }
   else if((somma == meta && turno == -1) || (somma >= meta && turno == -1))
   {
+    lcd.clear();
+    lcd.setCursor(0,0);
     lcd.println("Ha vinto il secondo giocatore!");ricomincia();
   }
 }  
