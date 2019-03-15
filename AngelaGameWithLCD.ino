@@ -28,7 +28,7 @@ lcd.begin(16,2);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
 }
 void assegnaValore(int giocata)
 {
@@ -161,7 +161,7 @@ void switchTurno()
 { 
     sistemaCursore(0,0);
     if(turno == -1)
-    {turno = 1;;lcd.println("Gioca il primo");}
+    {turno = 1;lcd.println("Gioca il primo");}
     else if(turno == 1)
     {turno = -1;lcd.println("Gioca il secondo");}
 }
@@ -170,11 +170,21 @@ void winOrLose()
   sistemaCursore(0,0);
   if((somma == meta && turno == 1) || (somma >= meta && turno == 1))
   {
-    lcd.println("Ha vinto il primo giocatore!");setup();
+    lcd.clear();
+    lcd.setCursor(4,0);
+    lcd.println("Ha vinto");
+    lcd.setCursor(0,1); 
+    lcd.println("il primo giocatore!");
+    setup();
   }
   else if((somma == meta && turno == -1) || (somma >= meta && turno == -1))
   {
-    lcd.println("Ha vinto il secondo giocatore!");setup();
+    lcd.clear();
+    lcd.setCursor(4,0);
+    lcd.println("Ha vinto");
+    lcd.setCursor(0,1); 
+    lcd.println("il secondo giocatore!");
+    setup();
   }
 }
 void sistemaCursore(int p1,int p2)
