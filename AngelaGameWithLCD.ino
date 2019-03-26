@@ -7,7 +7,6 @@ int turno;
 int somma;
 int meta;
 int giocataPre;
-bool turnoStart;
 int t;
 bool decisioneMeta;
 bool primaVolta;
@@ -17,7 +16,6 @@ void setup() {
   somma = 0;
   meta = 30;
   giocataPre = 0;
-  turnoStart = true;
   t = 1000;
   decisioneMeta = false;
   primaVolta = true;
@@ -42,25 +40,17 @@ void nuovaGiocata()
   }
   else if (turno == 1 || turno == -1)
   {
-    if (somma > meta)
-    {
+    if (somma >= meta) {
       winOrLose();
     }
-    if (giocataPre == 0);
+    else
     {
-      caso4(assegnaValore());
-    }
-    if (giocataPre == 1 || giocataPre == 6)
-    {
-      caso1(assegnaValore());
-    }
-    if (giocataPre == 2 || giocataPre == 5)
-    {
-      caso2(assegnaValore());
-    }
-    if (giocataPre == 3 || giocataPre == 4)
-    {
-      caso3(assegnaValore());
+      if (giocataPre == 0) {
+        caso4(assegnaValore());
+      }
+      else {
+        casoEX(assegnaValore());
+      }
     }
   }
 }
@@ -112,7 +102,6 @@ void caso0(int giocata)
 {
   if (giocata == 0)
   {
-    delay(t);
     sistemaCursore(0, 0); lcd.print(String(giocata)); delay(t);
   }
   else
@@ -120,39 +109,18 @@ void caso0(int giocata)
     selezioneCorretta(giocata);
     lcd.clear();
   }
-  sistemaCursore(0, 0); lcd.print("Gioca il secondo giocatore"); delay(t);
+  sistemaCursore(0, 0); lcd.print("Gioca G2"); delay(t);
   turno = -1;
   nuovaGiocata();
 }
 
 
-void caso1(int giocata)
+void casoEX(int giocata)
 {
-  sistemaCursore(0, 0); lcd.print(giocata);
   assegnaValore();
-  if (digitalRead(btn2) == LOW)
+  if (giocataPre == giocata || giocataPre == (7 - giocata))
   {
-    if (giocata == 1 || giocata == 6 || giocata == 0)
-    {
-      sistemaCursore(0, 0); lcd.print("Non barare"); delay(t); nuovaGiocata();
-    }
-    else
-    {
-      selezioneCorretta(giocata);
-      lcd.clear();
-      switchTurno();
-    }
-  }
-}
-
-
-void caso2(int giocata)
-{
-  sistemaCursore(0, 0); lcd.print(giocata);
-  assegnaValore();
-  if (giocata == 2 || giocata == 5 || giocata == 0)
-  {
-    sistemaCursore(0, 0); lcd.print("Non barare"); delay(t); nuovaGiocata();
+    selezioneErrata(giocata);
   }
   else
   {
@@ -160,24 +128,8 @@ void caso2(int giocata)
     lcd.clear();
     switchTurno();
   }
+  nuovaGiocata();
 }
-
-
-void caso3(int giocata)
-{ sistemaCursore(0, 0); lcd.print(giocata);
-  assegnaValore();
-  if (giocata == 3 || giocata == 4)
-  {
-    sistemaCursore(0, 0); lcd.print("Non barare"); delay(t); nuovaGiocata();
-  }
-  else
-  {
-    selezioneCorretta(giocata);
-    lcd.clear();
-    switchTurno();
-  }
-}
-
 
 void caso4(int giocata)
 {
@@ -185,13 +137,14 @@ void caso4(int giocata)
   assegnaValore();
   if (giocata == 0)
   {
-    sistemaCursore(0, 0); lcd.print("Non barare"); delay(t); nuovaGiocata();
+    selezioneErrata(giocata);
   }
   else {
     selezioneCorretta(giocata);
     lcd.clear();
     switchTurno();
   }
+  nuovaGiocata();
 }
 
 
@@ -248,14 +201,14 @@ void switchTurno()
   {
     sistemaCursore(0, 0);
     turno = 1;
-    lcd.print("Gioca il primo");
+    lcd.print("Gioca G1");
     delay(t);
   }
   else if (turno == 1)
   {
     sistemaCursore(0, 0);
     turno = -1;
-    lcd.print("Gioca il secondo");
+    lcd.print("Gioca G2");
     delay(t);
   }
 }
@@ -298,4 +251,14 @@ void selezioneCorretta(int giocata)
   somma += giocata;
   sistemaCursore(0, 0); lcd.print("Punteggio totale: "); delay(t);
   lcd.setCursor(0, 1); lcd.print(String(somma)); delay(t);
+}
+
+
+void selezioneErrata(int giocata)
+{
+  giocataPre = giocata;
+  sistemaCursore(0, 0);
+  lcd.print("Non barare");
+  delay(t);
+
 }
